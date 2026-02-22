@@ -3,6 +3,7 @@ package in.rajatpandey.musifyapp.Service;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import in.rajatpandey.musifyapp.documents.Song;
+import in.rajatpandey.musifyapp.dto.SongListResponse;
 import in.rajatpandey.musifyapp.dto.SongRequest;
 import in.rajatpandey.musifyapp.repository.SongRepository;
 import lombok.RequiredArgsConstructor;
@@ -45,5 +46,18 @@ public class SongService {
         int seconds =  (int)( durationSeconds%60);
 
         return String.format("%d:%02d",minutes,seconds);
+    }
+
+    public SongListResponse getAllSongs(){
+        return new SongListResponse(true,songRepository.findAll());
+    }
+
+    public Boolean removeSong(String id){
+        Song existingSong = songRepository.findById(id)
+                .orElseThrow(()-> new RuntimeException("Song not found!"));
+
+        songRepository.delete(existingSong);
+
+        return true;
     }
 }
