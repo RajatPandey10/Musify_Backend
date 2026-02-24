@@ -4,6 +4,7 @@ package in.rajatpandey.musifyapp.config;
 import in.rajatpandey.musifyapp.Service.AppUserDetailsService;
 import in.rajatpandey.musifyapp.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -38,7 +39,9 @@ public class SecurityConfig {
                         "/api/auth/login",
                         "/api/auth/register",
                         "/api/health"
-                ).permitAll().anyRequest().authenticated())
+                ).permitAll()
+                        .requestMatchers(HttpMethod.GET,"/api/albums","/api/songs").hasAnyRole("USER","ADMIN")
+                        .anyRequest().hasRole("ADMIN"))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
