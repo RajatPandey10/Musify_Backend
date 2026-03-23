@@ -72,6 +72,7 @@ public class UserService {
 
     public UserResponse getProfile(String email){
         User existingUser = findByEmail(email);
+
         return toResponse(existingUser);
     }
 }
