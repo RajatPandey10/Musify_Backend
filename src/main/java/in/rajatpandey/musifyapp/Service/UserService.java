@@ -16,6 +16,25 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    public User toDocument(RegisterRequest request){
+        return User.builder()
+                .subscriptionPlan("Basic")
+                .email(request.getEmail())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .role(User.Role.USER)
+                .build();
+    }
+
+    public UserResponse toResponse(User newUser){
+        return UserResponse.builder()
+                .subscriptionPlan(newUser.getSubscriptionPlan())
+                .id(newUser.getId())
+                .email(newUser.getEmail())
+                .role(UserResponse.Role.USER)
+                .build();
+
+    }
+
     public UserResponse registerUser(RegisterRequest request){
 
 //        chack if email already exists
@@ -24,6 +43,7 @@ public class UserService {
         }
 //        create new user
         User newUser = User.builder()
+                .subscriptionPlan("Basic")
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(User.Role.USER)
@@ -32,6 +52,7 @@ public class UserService {
         userRepository.save(newUser);
 
         return UserResponse.builder()
+                .subscriptionPlan(newUser.getSubscriptionPlan())
                 .id(newUser.getId())
                 .email(newUser.getEmail())
                 .role(UserResponse.Role.USER)
@@ -47,5 +68,10 @@ public class UserService {
         User existingUser = findByEmail(email);
         existingUser.setRole(User.Role.ADMIN);
         return userRepository.save(existingUser);
+    }
+
+    public UserResponse getProfile(String email){
+        User existingUser = findByEmail(email);
+        return toResponse(existingUser);
     }
 }

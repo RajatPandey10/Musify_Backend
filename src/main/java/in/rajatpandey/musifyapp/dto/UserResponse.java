@@ -15,6 +15,8 @@ public class UserResponse {
 
     private Role role;
 
+    private String subscriptionPlan;
+
     public enum Role{
         USER,ADMIN
     }

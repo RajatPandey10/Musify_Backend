@@ -19,6 +19,8 @@ public class User {
     @Id
     private String id;
 
+    private String subscriptionPlan = "basic";
+
     @Indexed(unique = true)
     private String email;
     private String password;
